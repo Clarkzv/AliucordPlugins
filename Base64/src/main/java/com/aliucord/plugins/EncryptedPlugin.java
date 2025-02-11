@@ -35,7 +35,7 @@ public class EncryptedPlugin extends Plugin {  // Renamed from Base64
     public void start(Context context) throws NoSuchMethodException {
         Drawable lockIcon = ContextCompat.getDrawable(context, com.lytefast.flexinput.R.e.ic_channel_text_locked).mutate();
 
-        commands.registerCommand("base64", "Encrypts Message Using Base64", 
+        commands.registerCommand("aes", "Encrypts Message Using Base64", 
             Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message you want to encrypt"), 
             commandContext -> {
                 String input = commandContext.getString("message");
