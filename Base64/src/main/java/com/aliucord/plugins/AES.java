@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @SuppressWarnings("unused")
 @AliucordPlugin
-public class AES extends Plugin {  // Renamed from Base64
+public class AES extends Plugin {
     int viewID = View.generateViewId();
     private static final String AES_ALGORITHM = "AES";
     private static final String SECRET_KEY = "0123456789abcdef"; // 16 chars for AES-128
@@ -35,8 +35,8 @@ public class AES extends Plugin {  // Renamed from Base64
     public void start(Context context) throws NoSuchMethodException {
         Drawable lockIcon = ContextCompat.getDrawable(context, com.lytefast.flexinput.R.e.ic_channel_text_locked).mutate();
 
-        commands.registerCommand("aes", "Encrypts Message Using AES",  // Changed from base64 to aes
-            Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message you want to encrypt"), 
+        commands.registerCommand("aes", "Encrypts Message Using AES",
+            Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message you want to encrypt"),
             commandContext -> {
                 String input = commandContext.getString("message");
                 if (input != null && !input.isEmpty()) {
@@ -55,13 +55,13 @@ public class AES extends Plugin {  // Renamed from Base64
                 if (lay.findViewById(viewID) == null && !message.getContent().contains(" ")) {
                     TextView tw = new TextView(lay.getContext(), null, 0, com.lytefast.flexinput.R.i.UiKit_Settings_Item_Icon);
                     tw.setId(viewID);
-                    tw.setText("AES Decode Message"); // Changed from Base64 to AES
+                    tw.setText("AES Decode Message");
                     tw.setCompoundDrawablesRelativeWithIntrinsicBounds(lockIcon, null, null, null);
                     lay.addView(tw, 8);
                     tw.setOnClickListener((v) -> {
                         var embed = new MessageEmbedBuilder()
-                            .setTitle("AES Decoded Message") // Changed from Base64 to AES
-                            .setDescription(decrypt(message.getContent()))
+                            .setTitle("AES Decoded Message")
+                            .setDescription(decodeAES(message.getContent())) // Changed function call to decodeAES
                             .build();
                         message.getEmbeds().add(embed);
                         StoreStream.getMessages().handleMessageUpdate(message.synthesizeApiMessage());
@@ -82,20 +82,38 @@ public class AES extends Plugin {  // Renamed from Base64
             Key key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), AES_ALGORITHM);
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            return android.util.Base64.encodeToString(cipher.doFinal(input.getBytes(StandardCharsets.UTF_8)), android.util.Base64.NO_WRAP);
+            return bytesToHex(cipher.doFinal(input.getBytes(StandardCharsets.UTF_8))); // Convert to hex
         } catch (Exception e) {
             return "Encryption failed!";
         }
     }
 
-    private static String decrypt(String input) {
+    private static String decodeAES(String input) { // Renamed from decrypt to decodeAES
         try {
             Key key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), AES_ALGORITHM);
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            return new String(cipher.doFinal(android.util.Base64.decode(input, android.util.Base64.NO_WRAP)), StandardCharsets.UTF_8);
+            return new String(cipher.doFinal(hexToBytes(input)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             return "Decryption failed!";
         }
+    }
+
+    private static String bytesToHex(byte[] bytes) { // Convert bytes to hex string
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    private static byte[] hexToBytes(String hex) { // Convert hex string back to bytes
+        int len = hex.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                                  + Character.digit(hex.charAt(i + 1), 16));
+        }
+        return data;
     }
 }
