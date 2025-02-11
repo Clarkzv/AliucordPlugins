@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @SuppressWarnings("unused")
 @AliucordPlugin
-public class EncryptedPlugin extends Plugin {  // Renamed from Base64
+public class AES extends Plugin {  // Renamed from Base64
     int viewID = View.generateViewId();
     private static final String AES_ALGORITHM = "AES";
     private static final String SECRET_KEY = "0123456789abcdef"; // 16 chars for AES-128
@@ -35,14 +35,14 @@ public class EncryptedPlugin extends Plugin {  // Renamed from Base64
     public void start(Context context) throws NoSuchMethodException {
         Drawable lockIcon = ContextCompat.getDrawable(context, com.lytefast.flexinput.R.e.ic_channel_text_locked).mutate();
 
-        commands.registerCommand("aes", "Encrypts Message Using Base64", 
+        commands.registerCommand("aes", "Encrypts Message Using AES",  // Changed from base64 to aes
             Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message you want to encrypt"), 
             commandContext -> {
                 String input = commandContext.getString("message");
                 if (input != null && !input.isEmpty()) {
                     return new CommandsAPI.CommandResult(encrypt(input));
                 }
-                return new CommandsAPI.CommandResult("Message shouldnt be empty", null, false);
+                return new CommandsAPI.CommandResult("Message shouldn't be empty", null, false);
             });
 
         patcher.patch(WidgetChatListActions.class.getDeclaredMethod("configureUI", WidgetChatListActions.Model.class),
@@ -55,12 +55,12 @@ public class EncryptedPlugin extends Plugin {  // Renamed from Base64
                 if (lay.findViewById(viewID) == null && !message.getContent().contains(" ")) {
                     TextView tw = new TextView(lay.getContext(), null, 0, com.lytefast.flexinput.R.i.UiKit_Settings_Item_Icon);
                     tw.setId(viewID);
-                    tw.setText("Base64 Decode Message");
+                    tw.setText("AES Decode Message"); // Changed from Base64 to AES
                     tw.setCompoundDrawablesRelativeWithIntrinsicBounds(lockIcon, null, null, null);
                     lay.addView(tw, 8);
                     tw.setOnClickListener((v) -> {
                         var embed = new MessageEmbedBuilder()
-                            .setTitle("Base64 Decoded Message")
+                            .setTitle("AES Decoded Message") // Changed from Base64 to AES
                             .setDescription(decrypt(message.getContent()))
                             .build();
                         message.getEmbeds().add(embed);
