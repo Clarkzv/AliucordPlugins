@@ -39,9 +39,9 @@ public class AESEncryptionPlugin extends Plugin {
 
         // Register the AES command
         commands.registerCommand("aes", "Encrypts or decrypts a message using AES", Utils.createCommandOptions(
-                Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message to encrypt or decrypt", true),
-                Utils.createCommandOption(ApplicationCommandType.STRING, "key", "Key for encryption or decryption (optional)", false),
-                Utils.createCommandOption(ApplicationCommandType.BOOLEAN, "encrypt", "Set to true to encrypt, false to decrypt", true)
+                Utils.createCommandOption(ApplicationCommandType.STRING, "message", "Message to encrypt or decrypt", 1), // 1 = required
+                Utils.createCommandOption(ApplicationCommandType.STRING, "key", "Key for encryption or decryption (optional)", 0), // 0 = optional
+                Utils.createCommandOption(ApplicationCommandType.BOOLEAN, "encrypt", "Set to true to encrypt, false to decrypt", 1) // 1 = required
         ), commandContext -> {
             String input = commandContext.getString("message");
             String key = commandContext.getString("key", DEFAULT_KEY); // Use default key if not provided
@@ -116,4 +116,4 @@ public class AESEncryptionPlugin extends Plugin {
         patcher.unpatchAll();
         commands.unregisterAll();
     }
-            }
+}
