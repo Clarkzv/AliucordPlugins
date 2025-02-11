@@ -25,7 +25,7 @@ jobs:
       - name: Build Plugins
         run: |
           chmod +x gradlew
-          ./gradlew TemplatePlugin:make
+          ./gradlew EncryptDMs:make
 
       - name: Upload all ZIP files
         uses: actions/upload-artifact@v4
