@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @SuppressWarnings("unused")
 @AliucordPlugin
-public class Base64 extends Plugin {
+public class EncryptedPlugin extends Plugin {  // Renamed from Base64
     int viewID = View.generateViewId();
     private static final String AES_ALGORITHM = "AES";
     private static final String SECRET_KEY = "0123456789abcdef"; // 16 chars for AES-128
