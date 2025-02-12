@@ -87,7 +87,6 @@ public class EncryptDMs extends Plugin {
     @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     public void start(Context context) throws Throwable {
-        /*
         this.context=context;
 
         userKeys = settings.getObject("userKeys",new HashMap<>(), TypeToken.getParameterized(HashMap.class, Long.class, String.class).getType());
@@ -205,8 +204,6 @@ public class EncryptDMs extends Plugin {
                 }
             }));
         }
-
-         */
     }
     public String decrypt(long channelID,String encryptedText){
         var id = userChannelMap.get(channelID);
@@ -245,7 +242,7 @@ public class EncryptDMs extends Plugin {
                         emptyList(), //users
                         emptyList(), // roles
                         false // repliedUser
-                ),null
+                )
         );
 
     }
